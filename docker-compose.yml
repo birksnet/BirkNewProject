@@ -1,0 +1,59 @@
+# BirksNet - dev_manager
+version: "3" 
+services:
+
+    vue: 
+      image: node:lts
+      container_name: birk_dev_vue
+      tty: true
+      working_dir: /var/www
+      volumes:
+        - "./vue/:/var/www/"
+      command: >
+                  bash -c "
+                    yarn global add @vue/cli
+                    yarn add cypress --dev
+                    yarn install
+                    yarn serve
+                  "
+      ports:
+        - "8000:8080"
+
+    nginx:
+        image: nginx
+        container_name: birk_dev_nginx
+        working_dir: /var/www/public
+        ports:
+          - "8080:80"
+        links:
+          - php
+        volumes:
+          - "./nginx/config/:/etc/nginx/conf.d/"
+          - "./nginx/public:/var/www/public"
+
+    php:
+        image: php
+        container_name: birk_dev_php
+        working_dir: /var/www/
+        tty: true
+        links:
+          - mysql
+        volumes:
+          - "./php/:/var/www/"
+        ports:
+          - 8081:8080
+
+    mysql:
+        image: mysql
+        container_name: birk_dev_mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: "Mudar123"
+          MYSQL_USER: "admin"
+          MYSQL_PASSWORD: "Mudar123"
+          MYSQL_DATABASE: "bk_manager"
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+          - ./database/mysql:/var/lib/mysql
+          - ./database/schema:/var/schema
+        ports:
+          - 3306:3306    

@@ -1,0 +1,4 @@
+#!/bin/bash
+CONTAINER=$1
+shift
+docker exec "birk_dev_"$CONTAINER "$@"

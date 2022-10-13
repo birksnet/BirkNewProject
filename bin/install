@@ -1,0 +1,7 @@
+#!/bin/bash
+docker compose up -d
+
+#instalação do composer
+bin/cli birk_dev_php curl -sS https://getcomposer.org/installer -o composer-setup.php
+bin/cli birk_dev_php php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+bin/cli birk_dev_php composer install
